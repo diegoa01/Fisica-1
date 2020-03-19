@@ -6,6 +6,8 @@ local Timer = require("lib.hump.timer")
 local Player = require("entity.player")
 
 local Game = {
+    debug = false,
+    
     explosionSFX = love.audio.newSource("/audio/sounds/explosion.ogg", "static"),
     
     bgFar = love.graphics.newImage("/img/game/background/skyline.png"),
@@ -44,6 +46,8 @@ end
 function Game:keypressed(key)
     if key == "escape" then
         GameState.push(self.gameStateSettings, self.gameStatePrevious)
+    elseif key == "f1" then
+        self.debug = not self.debug
     end
     
     if not self.moving then
@@ -71,6 +75,13 @@ function Game:draw()
     self:drawBackgroundNoCam()
     self.drone:draw()
     self.player:draw()
+    
+    if self.debug then
+        love.graphics.print("X0,Y0: " .. self.player.projectile.x0 .. ', ' ..  self.player.projectile.y0, 25, 25)
+        love.graphics.print("V0: " .. self.player.projectile.v .. ', ' ..  self.player.projectile.y0, 25, 40)
+        love.graphics.print("Current Angle: " .. self.player.angle, 25, 55)
+    end
+    
     self.camera:detach()
     Suit.draw()
 end

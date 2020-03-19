@@ -38,7 +38,8 @@ function Player:init(x, y)
     self.x = x
     self.y = y
     self.angle = 0
-    self.power = 0
+    self.power = 1
+    self.powerMult = 100
     self.state = 1
     self.iterator = 1
     self.arrowDraw = false
@@ -58,6 +59,7 @@ end
 function Player:keyreleased(key)
     if key == "space" then
         if self.projectile.state ~= 0 then
+            self.power = 1
             return
         end
         
@@ -66,11 +68,10 @@ function Player:keyreleased(key)
             self:disableArrow()
         end
         
-        self.power = 100
-        
         self.projectile:init(self.x + 56, self.y + 25, self.power, self.angle)
         self.projectile.state = 1
         self.state = 1
+        self.power = 1
         self.SFX.beam:setPitch(1)
         self.SFX.beam:play()
     elseif key == "up" or key == "down" then
@@ -85,6 +86,7 @@ function Player:update(dt)
     self:updateAngle(dt)
     self.projectile:update(dt)
     self.iterator = self.iterator + dt * 5 * self.state
+    
     if math.floor(self.iterator) > #self.sprites[self.state] then
         self.iterator = 1
     end
@@ -93,6 +95,14 @@ end
 function Player:updateAngle(dt)
     if self.state == 2 then
         return
+    end
+    
+    if love.keyboard.isDown("space") then
+        if self.power >= 100 or self.power <= 0 then
+            self.powerMult = -self.powerMult
+        end
+        
+        self.power = self.power + dt * self.powerMult
     end
     
     local mod = 25
@@ -117,17 +127,24 @@ function Player:updateAngle(dt)
     elseif self.angle > 90 then
         self.angle = 90
     end
+
 end
 
 function Player:draw()
     love.graphics.draw(self.sprites[self.state][math.floor(self.iterator)], self.x, self.y)
     
-    love.graphics.print(self.angle, 50, 50)
-    
     self.projectile:draw()
     
     if self.arrowDraw then
         self:drawArrow()
+    end
+    
+    if love.keyboard.isDown("space") and self.state ~= 2 and self.projectile.state == 0 then
+        love.graphics.setColor(0, 0.25, 1)
+        love.graphics.rectangle("fill", self.x + 60, self.y + 55, 5, -25)
+        love.graphics.setColor(0, 1, 1)
+        love.graphics.rectangle("fill", self.x + 60, self.y + 55, 5, -25 * (self.power/100))
+        love.graphics.setColor(1, 1, 1)
     end
 end
 
