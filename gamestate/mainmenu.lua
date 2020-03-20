@@ -95,7 +95,7 @@ end
 function MainMenu:draw()
     self.camera:attach()
     self:drawBackgroundNoCam()
-    love.graphics.draw(self.title, self.titleX, self.titleY)
+    --love.graphics.draw(self.title, self.titleX, self.titleY)
     self.camera:detach()
     Suit.draw()
 end

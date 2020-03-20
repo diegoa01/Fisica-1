@@ -6,6 +6,8 @@ function love.load(arg)
     math.randomseed(os.time())
     
     love.window.setMode(1036, 648, { resizable = true, minwidth = 518, minheight = 324 })
+    love.window.setIcon(love.image.newImageData("/img/icon.png"))
+    love.window.setTitle("Fisica 1 - Proyecto")
     love.graphics.setDefaultFilter("nearest", "nearest")
 
     Settings.musicBackground = love.audio.newSource("/audio/music/sci_fi_platformer02.ogg", "stream")
