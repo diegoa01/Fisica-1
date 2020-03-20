@@ -1,6 +1,6 @@
 # Fisica-1
 
-###Controls
+### Controls
 - up : Increase angle
 - down: Decrease angle
 - space: Shoot (Hold to charge)
